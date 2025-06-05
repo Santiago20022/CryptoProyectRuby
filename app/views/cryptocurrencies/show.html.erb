@@ -1,0 +1,10 @@
+<h1>Criptomoneda Seleccionada</h1>
+
+<% if @selected_crypto %>
+  <p><strong>Nombre:</strong> <%= @selected_crypto.name.capitalize %></p>
+  <p><strong>Precio (USD):</strong> $<%= @selected_crypto.price %></p>
+<% else %>
+  <p>No hay selección registrada aún.</p>
+<% end %>
+
+<%= link_to "Volver al dashboard", cryptocurrencies_path %>

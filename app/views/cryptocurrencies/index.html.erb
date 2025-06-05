@@ -4,8 +4,13 @@
   <p style="color: red;"><%= @error_message %></p>
 <% else %>
   <!-- Botón para seleccionar una cripto aleatoria -->
-  <button onclick="selectRandomCoin()">Seleccionar Cripto Aleatoria</button>
-  
+    <%= form_with url: cryptocurrencies_path, method: :post do %>
+        <%= hidden_field_tag :crypto_data, @crypto_data.to_json %>
+        <%= submit_tag 'like' %>
+    <% end %>
+
+
+    
   <!-- Tabla para mostrar las criptomonedas -->
   <table border="1">
     <thead>
@@ -15,12 +20,21 @@
       </tr>
     </thead>
     <tbody>
-      <% @crypto_data.each do |coin, data| %>
-        <tr>
-          <td class="coin-name"><%= coin.capitalize %></td>
-          <td class="coin-price">$<%= data["usd"] %></td>
-        </tr>
-      <% end %>
+        <% if @selected_crypto.nil? %>
+            <% @crypto_data.each do |coin, data| %>
+                <tr>
+                    <td class="coin-name"><%= coin.capitalize %></td>
+                    <td class="coin-price">$<%= data["usd"] %></td>
+                </tr>
+            <% end %>
+        <% else %>
+            <tr>
+                <td class="coin-name">1</td>
+                <td class="coin-price">$<%=  @selected_crypto.usd %></td>
+            </tr>
+        <%end%>
+      
+
     </tbody>
   </table>
 <% end %>

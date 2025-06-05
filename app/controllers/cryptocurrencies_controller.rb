@@ -8,6 +8,7 @@ class CryptocurrenciesController < ApplicationController
       # Verifica si la respuesta es exitosa
       if response.success?
         @crypto_data = response.parsed_response
+        
         Rails.logger.info "Datos de criptomonedas obtenidos con éxito: #{@crypto_data.inspect}"  # Agrega este log
       else
         @error_message = "Error al obtener los datos de la API. Código de respuesta: #{response.code}"
@@ -16,4 +17,26 @@ class CryptocurrenciesController < ApplicationController
       @error_message = "Error al obtener los datos: #{e.message}"
     end
   end
+
+  def create
+    json_data = params[:crypto_data]
+    if json_data.blank?
+      error_message = "No se recibieron datos de criptomonedas."
+      return render :index
+    end
+
+    crypto_data = JSON.parse(json_data)
+    crypto_key = crypto_data.keys.sample
+    selected_data = crypto_data[crypto_key]
+    @crypto_data = crypto_data
+    @selected_crypto = RandomSelection.create!(name: crypto_key, price: selected_data["usd"])
+
+    redirect_to cryptocurrency_path(@selected_crypto)
+    
+  end
+
+  def show
+    @selected_crypto = RandomSelection.last
+  end
+
 end
