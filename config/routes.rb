@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     collection do
       get :low_to_high
       get :high_to_low
+      get :search
     end
   end
 

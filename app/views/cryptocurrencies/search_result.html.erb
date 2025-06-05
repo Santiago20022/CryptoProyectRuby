@@ -1,0 +1,10 @@
+<h1>Resultado de Búsqueda</h1>
+
+<% if @searched_crypto %>
+  <p><strong>Nombre:</strong> <%= @searched_crypto[:name].capitalize %></p>
+  <p><strong>Precio (USD):</strong> $<%= @searched_crypto[:price] %></p>
+<% else %>
+  <p>No se encontró la criptomoneda buscada.</p>
+<% end %>
+
+<%= link_to "Volver al Dashboard", cryptocurrencies_path %>

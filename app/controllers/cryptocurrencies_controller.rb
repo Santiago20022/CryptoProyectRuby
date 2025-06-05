@@ -59,4 +59,31 @@ class CryptocurrenciesController < ApplicationController
     render :sorted
   end
 
+  def search
+    query = params[:query]&.strip&.downcase
+
+    if query.blank?
+      redirect_to cryptocurrencies_path, alert: "Ingresa un nombre de criptomoneda válido."
+      return
+    end
+
+    url = "https://api.coingecko.com/api/v3/simple/price?ids=#{query}&vs_currencies=usd"
+
+    begin
+      response = HTTParty.get(url)
+
+      if response.success? && response.parsed_response[query]
+        price = response.parsed_response[query]["usd"]
+        @searched_crypto = { name: query, price: price }
+      else
+        flash.now[:alert] = "No se encontró la criptomoneda '#{query}'."
+      end
+    rescue => e
+      flash.now[:alert] = "Error al buscar: #{e.message}"
+    end
+
+    render :search_result
+  end
+
+
 end

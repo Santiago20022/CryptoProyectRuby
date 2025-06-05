@@ -1,21 +1,25 @@
 <h1>Dashboard de Criptomonedas</h1>
 
+<%= form_with url: search_cryptocurrencies_path, method: :get, local: true do |form| %>
+  <%= form.label :query, "Buscar por nombre de moneda:" %>
+  <%= text_field_tag :query, params[:query], placeholder: "Ej: ethereum, bitcoin" %>
+  <%= form.submit "Buscar" %>
+<% end %>
+
 <% if @error_message %>
   <p style="color: red;"><%= @error_message %></p>
 <% else %>
   <!-- Botón para seleccionar una cripto aleatoria -->
-    <%= form_with url: cryptocurrencies_path, method: :post do %>
-        <%= hidden_field_tag :crypto_data, @crypto_data.to_json %>
-        <%= submit_tag 'like' %>
-    <% end %>
-    <p>
-        <%= link_to "🔼 Ordenar de Low to High", low_to_high_cryptocurrencies_path %> |
-        <%= link_to "🔽 Ordenar de High to Low", high_to_low_cryptocurrencies_path %>
-    </p>
+  <%= form_with url: cryptocurrencies_path, method: :post do %>
+    <%= hidden_field_tag :crypto_data, @crypto_data.to_json %>
+    <%= submit_tag 'like' %>
+  <% end %>
 
+  <p>
+    <%= link_to "🔼 Ordenar de Low to High", low_to_high_cryptocurrencies_path %> |
+    <%= link_to "🔽 Ordenar de High to Low", high_to_low_cryptocurrencies_path %>
+  </p>
 
-
-    
   <!-- Tabla para mostrar las criptomonedas -->
   <table border="1">
     <thead>
@@ -25,24 +29,19 @@
       </tr>
     </thead>
     <tbody>
-        <% if @selected_crypto.nil? %>
-            <% @crypto_data.each do |coin, data| %>
-                <tr>
-                    <td class="coin-name"><%= coin.capitalize %></td>
-                    <td class="coin-price">$<%= data["usd"] %></td>
-                </tr>
-            <% end %>
-        <% else %>
-            <tr>
-                <td class="coin-name">1</td>
-                <td class="coin-price">$<%=  @selected_crypto.usd %></td>
-            </tr>
-        <%end%>
-      
-
+      <% if @selected_crypto.nil? %>
+        <% @crypto_data.each do |coin, data| %>
+          <tr>
+            <td class="coin-name"><%= coin.capitalize %></td>
+            <td class="coin-price">$<%= data["usd"] %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td class="coin-name"><%= @selected_crypto.name.capitalize %></td>
+          <td class="coin-price">$<%= @selected_crypto.price %></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 <% end %>
-
-<!-- Incluir JavaScript compilado con Webpack (si usas jsbundling-rails) -->
-<%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
