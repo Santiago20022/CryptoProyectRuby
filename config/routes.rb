@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
   root "cryptocurrencies#index"
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Ruta para verificar el estado de la app
   get "up" => "rails/health#show", as: :rails_health_check
 
   resources :cryptocurrencies, only: [:index, :create, :show, :update] do
@@ -11,15 +9,20 @@ Rails.application.routes.draw do
       get :low_to_high
       get :high_to_low
       get :search
+
+      # NUEVA RUTA: sincroniza datos desde la API de CoinGecko
+      post :sync_from_api
+    end
+
+    member do
+      # NUEVA RUTA: alterna el estado de favorito (true/false)
+      patch :toggle_favorite
     end
   end
 
-
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
+  # Rutas PWA comentadas
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
   # root "posts#index"
 end
