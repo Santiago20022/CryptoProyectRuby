@@ -1,0 +1,29 @@
+<h1>Dashboard de Criptomonedas</h1>
+
+<% if @error_message %>
+  <p style="color: red;"><%= @error_message %></p>
+<% else %>
+  <!-- Botón para seleccionar una cripto aleatoria -->
+  <button onclick="selectRandomCoin()">Seleccionar Cripto Aleatoria</button>
+  
+  <!-- Tabla para mostrar las criptomonedas -->
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Criptomoneda</th>
+        <th>Precio (USD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @crypto_data.each do |coin, data| %>
+        <tr>
+          <td class="coin-name"><%= coin.capitalize %></td>
+          <td class="coin-price">$<%= data["usd"] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<!-- Incluir JavaScript compilado con Webpack (si usas jsbundling-rails) -->
+<%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
