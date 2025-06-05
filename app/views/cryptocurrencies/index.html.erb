@@ -8,6 +8,11 @@
         <%= hidden_field_tag :crypto_data, @crypto_data.to_json %>
         <%= submit_tag 'like' %>
     <% end %>
+    <p>
+        <%= link_to "🔼 Ordenar de Low to High", low_to_high_cryptocurrencies_path %> |
+        <%= link_to "🔽 Ordenar de High to Low", high_to_low_cryptocurrencies_path %>
+    </p>
+
 
 
     

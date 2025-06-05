@@ -6,7 +6,12 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  resources :cryptocurrencies, only: [:index, :create, :show, :update]
+  resources :cryptocurrencies, only: [:index, :create, :show, :update] do
+    collection do
+      get :low_to_high
+      get :high_to_low
+    end
+  end
 
 
 

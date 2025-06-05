@@ -1,0 +1,22 @@
+<h1>Criptomonedas Ordenadas</h1>
+
+<%= link_to "🔼 Ordenar de Low to High", low_to_high_cryptocurrencies_path %> |
+<%= link_to "🔽 Ordenar de High to Low", high_to_low_cryptocurrencies_path %> |
+<%= link_to "Volver al Dashboard", cryptocurrencies_path %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Precio (USD)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cryptos.each do |crypto| %>
+      <tr>
+        <td><%= crypto.name.capitalize %></td>
+        <td>$<%= crypto.price %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

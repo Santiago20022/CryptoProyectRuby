@@ -49,4 +49,14 @@ class CryptocurrenciesController < ApplicationController
     end
   end
 
+  def low_to_high
+    @cryptos = RandomSelection.order(price: :asc)
+    render :sorted
+  end
+
+  def high_to_low
+    @cryptos = RandomSelection.order(price: :desc)
+    render :sorted
+  end
+
 end
