@@ -3,6 +3,17 @@
 <% if @selected_crypto %>
   <p><strong>Nombre:</strong> <%= @selected_crypto.name.capitalize %></p>
   <p><strong>Precio (USD):</strong> $<%= @selected_crypto.price %></p>
+
+  <h3>Cambiar Precio</h3>
+  <%= form_with(model: @selected_crypto, url: cryptocurrency_path(@selected_crypto), method: :patch) do |form| %>
+    <div>
+      <%= form.label :price, "Nuevo Precio (USD):" %>
+      <%= form.number_field :price, step: 0.01 %>
+    </div>
+    <div>
+      <%= form.submit "Actualizar Precio" %>
+    </div>
+  <% end %>
 <% else %>
   <p>No hay selección registrada aún.</p>
 <% end %>

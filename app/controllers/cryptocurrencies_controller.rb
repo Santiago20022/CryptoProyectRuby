@@ -39,4 +39,14 @@ class CryptocurrenciesController < ApplicationController
     @selected_crypto = RandomSelection.last
   end
 
+  def update
+    @selected_crypto = RandomSelection.find(params[:id])
+    if @selected_crypto.update(price: params[:random_selection][:price])
+      redirect_to cryptocurrency_path(@selected_crypto), notice: "Precio actualizado correctamente."
+    else
+      flash.now[:alert] = "Error al actualizar el precio."
+      render :show
+    end
+  end
+
 end
