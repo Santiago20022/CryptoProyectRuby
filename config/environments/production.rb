@@ -60,6 +60,16 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
 
+  # Configura la URL de WebSockets para producción (usando wss:// para WebSockets seguros)
+  config.action_cable.url = "wss://#{config.hosts.first}/cable"
+
+# Permitir orígenes de solicitud seguros
+  config.action_cable.allowed_request_origins = [
+    'http://localhost:3000',      # Para desarrollo local
+    'https://your-production-url.com'  # Cambia esto con la URL de producción
+  ]
+
+
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
   #   user_name: Rails.application.credentials.dig(:smtp, :user_name),

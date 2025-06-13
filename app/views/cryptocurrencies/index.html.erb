@@ -1,7 +1,7 @@
-<h1>Dashboard de Criptomonedas</h1>
+<h1>Dashboard Cryptos</h1>
 
 <%= form_with url: search_cryptocurrencies_path, method: :get, local: true do |form| %>
-  <%= form.label :query, "Buscar por nombre de moneda:" %>
+  <%= form.label :query, "Search name by crypto:" %>
   <%= text_field_tag :query, params[:query], placeholder: "Ej: ethereum, bitcoin" %>
   <%= form.submit "Buscar" %>
 <% end %>
@@ -19,6 +19,11 @@
     <%= link_to "🔼 Ordenar de Low to High", low_to_high_cryptocurrencies_path %> |
     <%= link_to "🔽 Ordenar de High to Low", high_to_low_cryptocurrencies_path %>
   </p>
+  <div data-controller="saludo">
+    <input data-saludo-target="nombre" type="text" placeholder="Escribe tu nombre">
+    <button data-action="click->saludo#saludar">say hello</button>
+  </div>
+
 
   <!-- Tabla para mostrar las criptomonedas -->
   <table border="1">

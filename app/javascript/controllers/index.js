@@ -1,7 +1,9 @@
-import { application } from "../application"
+// app/javascript/controllers/index.js
 
-// Aquí no necesitas `@hotwired/stimulus-loading`
-import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers"
+import { application } from "./application"
 
-const context = require.context(".", true, /\.js$/)
-application.load(definitionsFromContext(context))
+import HelloController from "./hello_controller"
+application.register("hello", HelloController)
+
+import SaludoController from "./saludo_controller"
+application.register("saludo", SaludoController)
