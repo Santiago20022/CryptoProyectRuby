@@ -2,14 +2,17 @@ import consumer from "./consumer"
 
 consumer.subscriptions.create("CryptoPriceChannel", {
   connected() {
-    // Called when the subscription is ready for use on the server
+    console.log("Conectado al canal de precios de criptomonedas")
   },
 
   disconnected() {
-    // Called when the subscription has been terminated by the server
+    console.log("Desconectado del canal de precios de criptomonedas")
   },
 
   received(data) {
-    // Called when there's incoming data on the websocket for this channel
+    const priceElement = document.querySelector(`#price-${data.crypto_id}`);
+    if (priceElement) {
+      priceElement.innerHTML = `$${data.price}`;
+    }
   }
-});
+})

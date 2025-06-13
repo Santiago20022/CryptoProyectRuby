@@ -8,8 +8,7 @@ class CryptocurrenciesController < ApplicationController
       # Verifica si la respuesta es exitosa
       if response.success?
         @crypto_data = response.parsed_response
-        
-        Rails.logger.info "Datos de criptomonedas obtenidos con éxito: #{@crypto_data.inspect}"  # Agrega este log
+        Rails.logger.info "Datos de criptomonedas obtenidos con éxito: #{@crypto_data.inspect}"
       else
         @error_message = "Error al obtener los datos de la API. Código de respuesta: #{response.code}"
       end
@@ -21,18 +20,22 @@ class CryptocurrenciesController < ApplicationController
   def create
     json_data = params[:crypto_data]
     if json_data.blank?
-      error_message = "No se recibieron datos de criptomonedas."
+      @error_message = "No se recibieron datos de criptomonedas."
       return render :index
     end
 
     crypto_data = JSON.parse(json_data)
     crypto_key = crypto_data.keys.sample
     selected_data = crypto_data[crypto_key]
-    @crypto_data = crypto_data
     @selected_crypto = RandomSelection.create!(name: crypto_key, price: selected_data["usd"])
 
+    # Emitir la actualización de precio a través de WebSocket
+    ActionCable.server.broadcast "crypto_price_#{@selected_crypto.id}", {
+      crypto_id: @selected_crypto.id,
+      price: @selected_crypto.price
+    }
+
     redirect_to cryptocurrency_path(@selected_crypto)
-    
   end
 
   def show
@@ -41,7 +44,14 @@ class CryptocurrenciesController < ApplicationController
 
   def update
     @selected_crypto = RandomSelection.find(params[:id])
+    
     if @selected_crypto.update(price: params[:random_selection][:price])
+      # Emitir la actualización de precio a través de WebSocket
+      ActionCable.server.broadcast "crypto_price_#{@selected_crypto.id}", {
+        crypto_id: @selected_crypto.id,
+        price: @selected_crypto.price
+      }
+
       redirect_to cryptocurrency_path(@selected_crypto), notice: "Precio actualizado correctamente."
     else
       flash.now[:alert] = "Error al actualizar el precio."
@@ -84,6 +94,4 @@ class CryptocurrenciesController < ApplicationController
 
     render :search_result
   end
-
-
 end

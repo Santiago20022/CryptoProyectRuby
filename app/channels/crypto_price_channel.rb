@@ -1,11 +1,10 @@
 class CryptoPriceChannel < ApplicationCable::Channel
   def subscribed
-    # stream_from "some_channel"
+    # Se suscribe a un canal de precios de criptomonedas
     stream_from "crypto_price_#{params[:crypto_id]}"
-
   end
 
   def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
+    # Limpiar cualquier recurso cuando el canal se desconecte
   end
 end
