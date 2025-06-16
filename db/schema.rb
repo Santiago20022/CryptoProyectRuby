@@ -14,7 +14,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_221828) do
   create_table "cryptocurrencies", force: :cascade do |t|
     t.string "name"
     t.decimal "price"
-    t.boolean "favorite"
+    t.boolean "favorite", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

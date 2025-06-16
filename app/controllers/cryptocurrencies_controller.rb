@@ -11,15 +11,34 @@ class CryptocurrenciesController < ApplicationController
       return render :index
     end
 
-    crypto_data = JSON.parse(json_data)
-    debugger
-    crypto_key = crypto_data.keys.sample
-    selected_data = crypto_data[crypto_key]
-    @selected_crypto = RandomSelection.create!(name: crypto_key, price: selected_data["usd"])
+    begin
+      # Intentamos analizar los datos JSON
+      crypto_data = JSON.parse(json_data)
 
-    respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to cryptocurrency_path(@selected_crypto) }
+      # Verificamos si crypto_data tiene datos antes de continuar
+      if crypto_data.nil? || crypto_data.empty?
+        @error_message = "Los datos de criptomonedas son inválidos o están vacíos."
+        return render :index
+      end
+
+      # Seleccionar aleatoriamente una criptomoneda del conjunto
+      crypto_key = crypto_data.keys.sample
+      selected_data = crypto_data[crypto_key]
+      
+      # Crear la criptomoneda seleccionada en la base de datos
+      @selected_crypto = RandomSelection.create!(name: crypto_key, price: selected_data["usd"])
+
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to cryptocurrency_path(@selected_crypto) }
+      end
+
+    rescue JSON::ParserError => e
+      @error_message = "Error al analizar los datos JSON: #{e.message}"
+      return render :index
+    rescue => e
+      @error_message = "Ocurrió un error inesperado: #{e.message}"
+      return render :index
     end
   end
 
@@ -60,6 +79,9 @@ class CryptocurrenciesController < ApplicationController
   def search
     query = params[:query]&.strip&.downcase
 
+    # Verificar qué query se está enviando
+    puts "Buscando criptomoneda: #{query}"
+
     if query.blank?
       redirect_to cryptocurrencies_path, alert: "Ingresa un nombre de criptomoneda válido."
       return
@@ -69,6 +91,9 @@ class CryptocurrenciesController < ApplicationController
 
     begin
       response = HTTParty.get(url)
+
+      # Imprimir la respuesta de la API para ver qué datos estamos obteniendo
+      puts "Respuesta de la API para #{query}: #{response.parsed_response}"
 
       if response.success? && response.parsed_response[query]
         price = response.parsed_response[query]["usd"]
@@ -90,6 +115,9 @@ class CryptocurrenciesController < ApplicationController
 
     response = HTTParty.get(url)
     
+    # Imprimir la respuesta de la API para ver qué datos estamos obteniendo
+    puts "Respuesta de la API: #{response.parsed_response}"
+
     # Verifica si la respuesta es exitosa
     if response.success?
       response.parsed_response

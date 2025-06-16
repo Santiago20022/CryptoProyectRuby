@@ -13,6 +13,7 @@
 <% else %>
   <!-- Botón para seleccionar una cripto aleatoria -->
   <%= form_with url: cryptocurrencies_path, method: :post do %>
+    <!-- Enviar todos los datos de criptomonedas al hacer "like" -->
     <%= hidden_field_tag :crypto_data, @crypto_data.to_json %>
     <%= submit_tag 'like' %>
   <% end %>
