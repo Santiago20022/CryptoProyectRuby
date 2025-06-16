@@ -1,5 +1,7 @@
 <h1>Dashboard Cryptos</h1>
 
+<%= turbo_stream_from "crypto" %>
+
 <%= form_with url: search_cryptocurrencies_path, method: :get, local: true do |form| %>
   <%= form.label :query, "Search name by crypto:" %>
   <%= text_field_tag :query, params[:query], placeholder: "Ej: ethereum, bitcoin" %>
@@ -19,11 +21,6 @@
     <%= link_to "🔼 Ordenar de Low to High", low_to_high_cryptocurrencies_path %> |
     <%= link_to "🔽 Ordenar de High to Low", high_to_low_cryptocurrencies_path %>
   </p>
-  <div data-controller="saludo">
-    <input data-saludo-target="nombre" type="text" placeholder="Escribe tu nombre">
-    <button data-action="click->saludo#saludar">say hello</button>
-  </div>
-
 
   <!-- Tabla para mostrar las criptomonedas -->
   <table border="1">
@@ -31,20 +28,19 @@
       <tr>
         <th>Criptomoneda</th>
         <th>Precio (USD)</th>
+        <th>Acción</th>
       </tr>
     </thead>
     <tbody>
-      <% if @selected_crypto.nil? %>
-        <% @crypto_data.each do |coin, data| %>
-          <tr>
-            <td class="coin-name"><%= coin.capitalize %></td>
-            <td class="coin-price">$<%= data["usd"] %></td>
-          </tr>
+      <% if @cryptos.any? %>
+        <% @cryptos.each do |crypto| %>
+          <%= turbo_frame_tag "crypto_#{crypto.id}" do %>
+            <%= render partial: 'cryptocurrencies/crypto_row', locals: { crypto: crypto } %>
+          <% end %>
         <% end %>
       <% else %>
         <tr>
-          <td class="coin-name"><%= @selected_crypto.name.capitalize %></td>
-          <td class="coin-price">$<%= @selected_crypto.price %></td>
+          <td colspan="3">No cryptos available</td>
         </tr>
       <% end %>
     </tbody>

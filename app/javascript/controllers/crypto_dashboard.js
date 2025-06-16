@@ -1,6 +1,5 @@
-// app/javascript/controllers/crypto_dashboard.js
-document.addEventListener("DOMContentLoaded", function () {
-  window.selectRandomCoin = function () {
+document.addEventListener("DOMContentLoaded", function() {
+  window.selectRandomCoin = function() {
     const rows = document.querySelectorAll("table tbody tr");
     if (rows.length === 0) return;
 
@@ -10,10 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const name = randomRow.querySelector(".coin-name").innerText;
     const price = parseFloat(randomRow.querySelector(".coin-price").innerText.replace("$", ""));
+    console.log("Selected coin:", name, price);
 
-    console.log("Seleccionada:", name, price);
-
-    // Opcional: guardar en el backend
     fetch("/random_selections", {
       method: "POST",
       headers: {
@@ -22,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       body: JSON.stringify({ name: name, price: price })
     }).then(res => res.json()).then(data => {
-      console.log("Guardado en DB:", data);
+      console.log("Saved to DB:", data);
     });
   };
 });

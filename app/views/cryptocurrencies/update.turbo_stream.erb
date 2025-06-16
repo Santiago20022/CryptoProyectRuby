@@ -1,0 +1,3 @@
+<%= turbo_stream.replace "crypto-#{@selected_crypto.id}" do %>
+  <%= render partial: "cryptocurrencies/crypto_row", locals: { crypto: @selected_crypto } %>
+<% end %> 

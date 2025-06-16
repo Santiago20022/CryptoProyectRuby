@@ -1,0 +1,10 @@
+<tr id="crypto-<%= crypto.id %>">
+  <td class="coin-name"><%= crypto.name.capitalize %></td>
+  <td class="coin-price" id="price-<%= crypto.id %>"><%= crypto.price %></td>
+  <td>
+    <%= form_with model: crypto, url: cryptocurrency_path(crypto), method: :patch, data: { turbo_frame: "crypto_#{crypto.id}" } do |form| %>
+      <%= form.number_field :price, step: 0.01 %>
+      <%= form.submit "Actualizar Precio" %>
+    <% end %>
+  </td>
+</tr>
